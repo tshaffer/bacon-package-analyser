@@ -74,15 +74,8 @@ export default function(state = initialState, action: any) {
 
       if (isNil(newPackageDependencies[bsPackageName])) {
         newPackageDependencies[bsPackageName] = {};
-        newPackageDependencies[bsPackageName].packageDependenciesByPackage = {};
       }
       newPackageDependencies[bsPackageName][dependentPackageName] = dependentPackageVersion;
-      // if (isNil(packageDependenciesByPackage[bsPackageName])) {
-      //   packageDependenciesByPackage[bsPackageName] = {};
-      // }
-      // packageDependenciesByPackage[bsPackageName][dependentPackageName] = dependentPackageVersion;
-
-      // newPackageDependencies[bsPackageName] = { dependentPackageName, dependentPackageVersion };
 
       const newState = {
         bsPackagesByPackageName: state.bsPackagesByPackageName,

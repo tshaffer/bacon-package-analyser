@@ -226,26 +226,8 @@ class App extends React.Component<any, object> {
 
     for (const dependentPackageName in baconPackageJson.dependencies) {
       if (baconPackageJson.dependencies.hasOwnProperty(dependentPackageName)) {
-
-        // const packageName: string = dependencyName.substr(12);
-        // const packageVersionSpec: string = baconPackageJson.dependencies[dependencyName];
-        // this.props.addPackageDependency('bacon', packageName, packageVersionSpec);
-
-        // const packageName: string = dependentPackageName.substr(12);
         const packageVersionSpec: string = baconPackageJson.dependencies[dependentPackageName];
         this.props.addPackageDependency('bacon', dependentPackageName, packageVersionSpec);
-
-        // if (dependencyName.startsWith('@brightsign/')) {
-        //
-        //   const bsPackageName: string = dependencyName.substr(12);
-        //   const bsPackageVersionSpec: string = baconPackageJson.dependencies[dependencyName];
-        //
-        //   // const specifiedBsPackage: SpecifiedBsPackage = {
-        //   //   name: bsPackageName,
-        //   //   version: bsPackageVersionSpec
-        //   // };
-        //   // packageDotJsonVersionsMap[bsPackageName] = specifiedBsPackage;
-        // }
       }
     }
 
