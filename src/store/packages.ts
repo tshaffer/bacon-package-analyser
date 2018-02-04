@@ -2,19 +2,14 @@ import { isNil } from 'lodash';
 
 import {
   BsPackage,
-  // PackageDependency,
-  // PackageVersionSelectorType,
 } from '../interfaces';
 
 // ------------------------------------
 // Constants
 // ------------------------------------
-export const ADD_PACKAGE = 'ADD_PACKAGE';
-export const ADD_PACKAGE_DEPENDENCY = 'ADD_PACKAGE_DEPENDENCY';
-// export const SET_PACKAGE_VERSION_SELECTOR = 'SET_PACKAGE_VERSION_SELECTOR';
-// export const SET_SELECTED_TAG_INDEX = 'SET_SELECTED_TAG_INDEX';
-// export const SET_SELECTED_BRANCH_NAME = 'SET_SELECTED_BRANCH_NAME';
-// export const SET_SPECIFIED_COMMIT_HASH = 'SET_SPECIFIED_COMMIT_HASH';
+const ADD_PACKAGE = 'ADD_PACKAGE';
+const ADD_PACKAGE_DEPENDENCY = 'ADD_PACKAGE_DEPENDENCY';
+const ADD_EXTERNAL_PACKAGE = 'ADD_EXTERNAL_PACKAGE';
 
 // ------------------------------------
 // Actions
@@ -38,13 +33,22 @@ export function addPackageDependency(bsPackageName: string, dependentPackageName
   };
 }
 
+export function addExternalPackage(externalPackageName: string) {
+  return {
+    type: ADD_EXTERNAL_PACKAGE,
+    payload: externalPackageName
+  };
+}
+
+
 // ------------------------------------
 // Reducer
 // ------------------------------------
 const initialState =
   {
     bsPackagesByPackageName: {},
-    packageDependencies: {} // maps bsPackage to dependent package dependencies (which is an object of name, version)
+    packageDependencies: {}, // maps bsPackage to dependent package dependencies (which is an object of name, version)
+    externalPackages: {} // dependent package name is key; { referenceCount: num }
   };
 
 export default function(state = initialState, action: any) {
@@ -59,8 +63,8 @@ export default function(state = initialState, action: any) {
 
       const newState = {
         bsPackagesByPackageName: newBsPackagesByPackageName,
-        packageDependencies: state.packageDependencies
-
+        packageDependencies: state.packageDependencies,
+        externalPackages: state.externalPackages
       };
 
       return newState;
@@ -79,7 +83,32 @@ export default function(state = initialState, action: any) {
 
       const newState = {
         bsPackagesByPackageName: state.bsPackagesByPackageName,
-        packageDependencies: newPackageDependencies
+        packageDependencies: newPackageDependencies,
+        externalPackages: state.externalPackages
+      };
+
+      console.log(newState);
+
+      return newState;
+    }
+
+    case ADD_EXTERNAL_PACKAGE: {
+
+      const newExternalPackages: any = Object.assign({}, state.externalPackages);
+
+      const externalPackageName: string = action.payload;
+      if (newExternalPackages.hasOwnProperty(externalPackageName)) {
+        const externalPackage: any = newExternalPackages[externalPackageName];
+        externalPackage.referenceCount++;
+      }
+      else {
+        newExternalPackages[externalPackageName] = { referenceCount: 1 };
+      }
+
+      const newState = {
+        bsPackagesByPackageName: state.bsPackagesByPackageName,
+        packageDependencies: state.packageDependencies,
+        externalPackages: newExternalPackages,
       };
 
       console.log(newState);

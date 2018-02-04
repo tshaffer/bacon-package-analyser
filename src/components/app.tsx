@@ -20,22 +20,13 @@ import { bindActionCreators, Dispatch } from 'redux';
 import * as shell from 'shelljs';
 
 import {
+  addExternalPackage,
   addPackage,
   addPackageDependency,
-  // setPackageVersionSelector,
-  // setSelectedBranchName,
-  // setSelectedTagIndex,
-  // setSpecifiedCommitHash,
 } from '../store/packages';
 
 import {
   BsPackage,
-  // BsTag,
-  // PackageVersionComparisonType,
-  // PackageVersionSelectorType,
-  // RecentCommitData,
-  // SpecifiedBsPackage,
-  // // SpecifiedBsPackageMap,
 } from '../interfaces';
 
 class App extends React.Component<any, object> {
@@ -77,10 +68,16 @@ class App extends React.Component<any, object> {
   }
 
   parseBaconModules() : void {
-
     this.packageNames.forEach( (moduleName: string) => {
       this.parseDotJson(moduleName);
     });
+  }
+
+  isBaconPackage(packageName: string) : boolean {
+    if (packageName.startsWith(('@brightsign'))) {
+      return true;
+    }
+    return false;
   }
 
   parseDotJson(moduleName: string): void {
@@ -96,6 +93,9 @@ class App extends React.Component<any, object> {
 
     for (const dependentPackageName in modulePackageJson.dependencies) {
       if (modulePackageJson.dependencies.hasOwnProperty(dependentPackageName)) {
+        if (!this.isBaconPackage(dependentPackageName)) {
+          this.props.addExternalPackage(dependentPackageName);
+        }
         const packageVersionSpec: string = modulePackageJson.dependencies[dependentPackageName];
         this.props.addPackageDependency(moduleName, dependentPackageName, packageVersionSpec);
       }
@@ -103,6 +103,9 @@ class App extends React.Component<any, object> {
 
     for (const dependentPackageName in modulePackageJson.peerDependencies) {
       if (modulePackageJson.peerDependencies.hasOwnProperty(dependentPackageName)) {
+        if (!this.isBaconPackage(dependentPackageName)) {
+          this.props.addExternalPackage(dependentPackageName);
+        }
         const packageVersionSpec: string = modulePackageJson.peerDependencies[dependentPackageName];
         this.props.addPackageDependency(moduleName, dependentPackageName, packageVersionSpec);
       }
@@ -159,6 +162,7 @@ function mapStateToProps(state : any) {
 
 const mapDispatchToProps = (dispatch: Dispatch<any>) => {
   return bindActionCreators({
+    addExternalPackage,
     addPackage,
     addPackageDependency,
   }, dispatch);
