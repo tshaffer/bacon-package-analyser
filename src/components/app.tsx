@@ -100,6 +100,13 @@ class App extends React.Component<any, object> {
         this.props.addPackageDependency(moduleName, dependentPackageName, packageVersionSpec);
       }
     }
+
+    for (const dependentPackageName in modulePackageJson.peerDependencies) {
+      if (modulePackageJson.peerDependencies.hasOwnProperty(dependentPackageName)) {
+        const packageVersionSpec: string = modulePackageJson.peerDependencies[dependentPackageName];
+        this.props.addPackageDependency(moduleName, dependentPackageName, packageVersionSpec);
+      }
+    }
   }
 
   render() {
