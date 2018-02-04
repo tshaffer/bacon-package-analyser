@@ -2,6 +2,7 @@ import { isNil } from 'lodash';
 
 import {
   BsPackage,
+  DependencyType,
 } from '../interfaces';
 
 // ------------------------------------
@@ -22,13 +23,14 @@ export function addPackage(bsPackage: BsPackage) {
 }
 
 export function addPackageDependency(bsPackageName: string, dependentPackageName: string,
-                                     dependentPackageVersion: string) {
+                                     dependentPackageVersion: string, dependencyType: DependencyType) {
   return {
     type: ADD_PACKAGE_DEPENDENCY,
     payload: {
       bsPackageName,
       dependentPackageName,
-      dependentPackageVersion
+      dependentPackageVersion,
+      dependencyType,
     }
   };
 }
@@ -72,14 +74,17 @@ export default function(state = initialState, action: any) {
 
     case ADD_PACKAGE_DEPENDENCY: {
 
-      const { bsPackageName, dependentPackageName, dependentPackageVersion } = action.payload;
+      const { bsPackageName, dependentPackageName, dependentPackageVersion, dependencyType } = action.payload;
 
       const newPackageDependencies: any = Object.assign({}, state.packageDependencies);
 
       if (isNil(newPackageDependencies[bsPackageName])) {
         newPackageDependencies[bsPackageName] = {};
       }
-      newPackageDependencies[bsPackageName][dependentPackageName] = dependentPackageVersion;
+      newPackageDependencies[bsPackageName][dependentPackageName] = {
+        version: dependentPackageVersion,
+        type: dependencyType
+      };
 
       const newState = {
         bsPackagesByPackageName: state.bsPackagesByPackageName,

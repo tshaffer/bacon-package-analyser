@@ -3,6 +3,13 @@ export interface BsPackage {
   currentVersion: string;
 }
 
+export class DependencyType {
+  static Dependency = 'dependency';
+  static PeerDependency = 'peerDependency';
+}
+Object.freeze(DependencyType);
+
+
 // export interface PackageDependency {
 //   bsPackageName: string;
 //   dependentPackageName: string;

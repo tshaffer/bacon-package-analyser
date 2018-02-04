@@ -27,6 +27,7 @@ import {
 
 import {
   BsPackage,
+  DependencyType,
 } from '../interfaces';
 
 class App extends React.Component<any, object> {
@@ -97,7 +98,8 @@ class App extends React.Component<any, object> {
           this.props.addExternalPackage(dependentPackageName);
         }
         const packageVersionSpec: string = modulePackageJson.dependencies[dependentPackageName];
-        this.props.addPackageDependency(moduleName, dependentPackageName, packageVersionSpec);
+        this.props.addPackageDependency(moduleName, dependentPackageName,
+          packageVersionSpec, DependencyType.Dependency);
       }
     }
 
@@ -107,7 +109,8 @@ class App extends React.Component<any, object> {
           this.props.addExternalPackage(dependentPackageName);
         }
         const packageVersionSpec: string = modulePackageJson.peerDependencies[dependentPackageName];
-        this.props.addPackageDependency(moduleName, dependentPackageName, packageVersionSpec);
+        this.props.addPackageDependency(moduleName, dependentPackageName,
+          packageVersionSpec, DependencyType.PeerDependency);
       }
     }
   }
