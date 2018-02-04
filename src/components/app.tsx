@@ -145,6 +145,21 @@ class App extends React.Component<any, object> {
     const sortedBaconPackageReferences: any[] = baconPackageReferences.sort(this.baconPackageReferencesComparator);
     console.log(sortedBaconPackageReferences);
 
+    const report = fs.createWriteStream('report.txt', {
+      flags: 'w'
+    })
+
+    report.write('Intra bacon package dependencies\n');
+
+    sortedBaconPackageReferences.forEach((baconPackageReference: any) => {
+      report.write(baconPackageReference.name + '\n');
+      baconPackageReference.data.forEach((bPackage: any) => {
+        report.write('\t' + bPackage.version + '\t\t' + bPackage.name + '\n');
+      });
+    });
+
+    report.end();
+
     return (
       <div>Pizza</div>
     );
