@@ -23,6 +23,7 @@ import {
   addExternalPackage,
   addPackage,
   addPackageDependency,
+  getBsPackageListData,
 } from '../store/packages';
 
 import {
@@ -69,6 +70,7 @@ class App extends React.Component<any, object> {
   }
 
   parseBaconModules() : void {
+
     this.packageNames.forEach( (moduleName: string) => {
       this.parseDotJson(moduleName);
     });
@@ -117,6 +119,9 @@ class App extends React.Component<any, object> {
 
   render() {
 
+    const data: any = this.props.bsPackageListData;
+    console.log(data);
+
     return (
       <div>Pizza</div>
     );
@@ -160,6 +165,7 @@ class App extends React.Component<any, object> {
 function mapStateToProps(state : any) {
   return {
     bsPackages: state.bsPackages,
+    bsPackageListData: getBsPackageListData(state),
   };
 }
 

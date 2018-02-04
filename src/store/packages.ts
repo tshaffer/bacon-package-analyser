@@ -42,7 +42,6 @@ export function addExternalPackage(externalPackageName: string) {
   };
 }
 
-
 // ------------------------------------
 // Reducer
 // ------------------------------------
@@ -124,3 +123,48 @@ export default function(state = initialState, action: any) {
 
   return state;
 }
+
+// ------------------------------------
+// Selectors
+// ------------------------------------
+export const getBsPackageListData = (state: any): any [] => {
+
+  console.log('getBsPackageListData invoked: ', state);
+
+  const bsPackageListData: any = {};
+
+  const bsPackages: any = state.bsPackages;
+  const { bsPackagesByPackageName, packageDependencies, externalPackages } = bsPackages;
+
+  for (const bsPackageName in bsPackagesByPackageName) {
+    if (bsPackagesByPackageName.hasOwnProperty(bsPackageName)) {
+
+      const bsPackage: any = bsPackagesByPackageName[bsPackageName];
+      const bsPackageVersion = bsPackage.currentVersion;
+
+      // get packages that reference this package
+      const packagesThatReferenceThisPackage: any = packageDependencies[bsPackageName];
+      for (const packageThatReferencesThisPackageName in packagesThatReferenceThisPackage) {
+        if (packageThatReferencesThisPackageName.startsWith(('@brightsign'))) {
+          if (packagesThatReferenceThisPackage.hasOwnProperty(packageThatReferencesThisPackageName)) {
+            const packageThatReferencesThisPackage: any =
+              packagesThatReferenceThisPackage[packageThatReferencesThisPackageName];
+
+            const reference: any = {
+              name: bsPackageName,
+              version: packageThatReferencesThisPackage.version
+            };
+
+            const name = packageThatReferencesThisPackageName.substr(12);
+            if (!bsPackageListData.hasOwnProperty(name)) {
+              bsPackageListData[name] = [];
+            }
+            bsPackageListData[name].push(reference);
+          }
+        }
+      }
+    }
+  }
+
+  return bsPackageListData;
+};
