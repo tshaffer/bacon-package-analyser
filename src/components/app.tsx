@@ -117,10 +117,33 @@ class App extends React.Component<any, object> {
     }
   }
 
+  baconPackageReferencesComparator(a: any, b: any): number {
+    if (a.data.length < b.data.length) {
+      return 1;
+    }
+    else if (a.data.length > b.data.length) {
+      return -1;
+    }
+    return 0;
+  }
+
   render() {
 
-    const data: any = this.props.bsPackageListData;
-    console.log(data);
+    const baconPackageReferences: any[] = [];
+
+    for (const bsPackageName in this.props.bsPackageListData) {
+      if (this.props.bsPackageListData.hasOwnProperty(bsPackageName)) {
+        baconPackageReferences.push( {
+          name: bsPackageName,
+          data: this.props.bsPackageListData[bsPackageName],
+        });
+      }
+    }
+
+    console.log(baconPackageReferences);
+
+    const sortedBaconPackageReferences: any[] = baconPackageReferences.sort(this.baconPackageReferencesComparator);
+    console.log(sortedBaconPackageReferences);
 
     return (
       <div>Pizza</div>
