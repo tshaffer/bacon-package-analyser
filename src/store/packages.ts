@@ -168,3 +168,24 @@ export const getBsPackageListData = (state: any): any [] => {
 
   return bsPackageListData;
 };
+
+export const getMultiplyReferencedExternalPackages = (state: any): any [] => {
+
+  const multiplyReferencedPackages: any[] = [];
+
+  const bsPackages: any = state.bsPackages;
+  const { bsPackagesByPackageName, packageDependencies, externalPackages } = bsPackages;
+
+  for (const externalPackageName in externalPackages) {
+    if (externalPackages.hasOwnProperty(externalPackageName)) {
+      const externalPackage: any = externalPackages[externalPackageName];
+      if (externalPackage.referenceCount > 1) {
+        multiplyReferencedPackages.push(externalPackageName);
+      }
+    }
+  }
+
+  return multiplyReferencedPackages;
+}
+
+

@@ -24,6 +24,7 @@ import {
   addPackage,
   addPackageDependency,
   getBsPackageListData,
+  getMultiplyReferencedExternalPackages,
 } from '../store/packages';
 
 import {
@@ -158,6 +159,10 @@ class App extends React.Component<any, object> {
       });
     });
 
+    report.write('\nExternal packages referenced more than once from bacon:\n');
+    this.props.multiplyReferencedExternalPackages.forEach( (externalPackageName: string) => {
+      report.write(externalPackageName + '\n');
+    });
     report.end();
 
     return (
@@ -204,6 +209,7 @@ function mapStateToProps(state : any) {
   return {
     bsPackages: state.bsPackages,
     bsPackageListData: getBsPackageListData(state),
+    multiplyReferencedExternalPackages: getMultiplyReferencedExternalPackages(state),
   };
 }
 
